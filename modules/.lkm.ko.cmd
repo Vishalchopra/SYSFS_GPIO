@@ -1,0 +1,1 @@
+cmd_/home/debian/Desktop/Extra/gpio_user/lkm.ko := ld -EL -r  -T /usr/src/linux-headers-3.8.13-bone79/scripts/module-common.lds --build-id  -o /home/debian/Desktop/Extra/gpio_user/lkm.ko /home/debian/Desktop/Extra/gpio_user/lkm.o /home/debian/Desktop/Extra/gpio_user/lkm.mod.o

@@ -66,7 +66,7 @@ static ssize_t ledOn_show(struct kobject *kobj, struct kobj_attribute *atr, char
 
 static ssize_t lastTime_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
 {
-	return sprintf(buf, "%.2lu:%.2lu:%.2lu:%.9lu \n", ts_last);
+	return sprintf(buf, "%.2lu:%.2lu:%.2lu:%.9lu \n", (ts_last.tv_sec / 3600) % 24, (ts_last.tv_sec / 60) % 60, (ts_last.tv_sec % 60), ts_last.tv_nsec);
 
 
 }
@@ -74,7 +74,7 @@ static ssize_t lastTime_show(struct kobject *kobj, struct kobj_attribute *attr, 
 /** @breif Display the time difference between push button time*/
 static ssize_t diffTime_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
 {
-	return sprintf(buf, "%lu", ts_diff);
+	return sprintf(buf, "%lu.%.9lu", ts_diff.tv_sec, ts_diff.tv_nsec);
 }
 
 /* @breif Displays if button Debouncing is on or off */
@@ -197,7 +197,7 @@ static void __exit ebbButton_exit(void)
 static irq_handler_t gpio_irq_handler(unsigned int irqNumber, void *dev_id, struct pt_regs *regs)
 {
 	ledOn = !ledOn;
-	get_set_value(gpioLED, ledOn);
+	gpio_set_value(gpioLED, ledOn);
 	getnstimeofday(&ts_current);
 	ts_diff = timespec_sub(ts_current, ts_last);
 	ts_last = ts_current;
