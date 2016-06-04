@@ -1,6 +1,6 @@
 INSTALLDIR=$(shell pwd)/modules
 obj-m := lkm.o
-lkm-objs := button.o 
+lkm-objs := Button.o 
 
 
 all:
