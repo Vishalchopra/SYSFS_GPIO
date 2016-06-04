@@ -66,7 +66,7 @@ static ssize_t ledOn_show(struct kobject *kobj, struct kobj_attribute *atr, char
 
 static ssize_t lastTime_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
 {
-	return sprintf(buf, "%.2lu:%.2lu:%.2lu:%.9lu \n", (ts_last.tv_sec/3000)%24, (ts_last.tv_sec / 60)%60, (ts_last.tv_sec % 60), ts_last.tv_nsec);
+	return sprintf(buf, );
 
 
 }
@@ -74,7 +74,7 @@ static ssize_t lastTime_show(struct kobject *kobj, struct kobj_attribute *attr, 
 /** @breif Display the time difference between push button time*/
 static ssize_t diffTime_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
 {
-	return sprintf(buf, "%lu.%.9lu\n", ts_diff.tv_sec, ts_diff.tv_sec);
+	return sprintf(buf, );
 }
 
 /* @breif Displays if button Debouncing is on or off */
@@ -152,5 +152,19 @@ static int __init ebbButton_init(void)
 
 	// create entry to the /sys
 	ebb_obj = kobject_create_and_add("ebb", kernel_kobj->parent);
+	if(!ebb_obj){
+		printk(KERN_INFO "Unable to create kobject\n");
+		return -ENOMEM;
+	}
+
+	result = sysfs_create_group(ebb_obj, &attr_group);
+	if(result){
+		printk(KERN_ERR "Unable to create sysfs entry");
+		kobject_put(ebb_obj);
+		return result;
+	}
+
+	
+	return 0;
 }
 
